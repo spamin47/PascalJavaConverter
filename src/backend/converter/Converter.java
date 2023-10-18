@@ -650,6 +650,50 @@ public class Converter extends PascalBaseVisitor<Object>
         
         return null;
     }
+    @Override
+    public Object visitWhileStatement(PascalParser.WhileStatementContext ctx){
+        code.emitStart("while(");
+        code.emit((String)visit(ctx.expression()));
+        code.emitEnd(")");
+
+        code.emitLine("{");
+        code.indent();
+        visit(ctx.statement());
+        code.dedent();
+        code.emitLine("}");
+
+        return null;
+    }
+
+    @Override
+    public Object visitIfStatement(PascalParser.IfStatementContext ctx){
+        boolean containElse = ctx.children.size() > 4;
+        code.emitStart("if(");
+        code.emit((String)visit(ctx.expression()));
+        code.emitEnd(")");
+
+        //write out java code for if statement
+        code.emitLine("{");
+        code.indent();
+        visit(ctx.trueStatement());
+        code.dedent();
+        code.emitLine("}");
+
+        //write out java code for else statement
+        if(containElse){
+            code.emit("else");
+            code.emitLine("{");
+            code.indent();
+            visit(ctx.falseStatement());
+            code.dedent();
+            code.emitLine("}");
+        }
+
+        System.out.println();
+
+
+        return null;
+    }
 
     @Override 
     public Object visitExpression(PascalParser.ExpressionContext ctx) 

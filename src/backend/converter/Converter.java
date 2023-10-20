@@ -710,8 +710,6 @@ public class Converter extends PascalBaseVisitor<Object>
     }
     @Override
     public Object visitCaseStatement(PascalParser.CaseStatementContext ctx){
-//        System.out.println("building switch statement");
-//        System.out.println("Expression: " + (String)visit(ctx.expression()));
         code.emitStart("switch(");
         code.emit((String)visit(ctx.expression()));
         code.emitEnd(")");

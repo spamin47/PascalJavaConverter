@@ -688,9 +688,38 @@ public class Converter extends PascalBaseVisitor<Object>
             code.dedent();
             code.emitLine("}");
         }
-
         System.out.println();
+        return null;
+    }
+    @Override
+    public Object visitCaseBranch(PascalParser.CaseBranchContext ctx){
+        System.out.println("case branch visited");
+        try{
+            String caseConstants = ctx.caseConstantList().getText();
+            code.emit("case ");
+            code.emit(caseConstants + ":");
+            code.emitLine();
+            code.indent();
+            visit(ctx.statement());
+            code.emitLine("break;");
+            code.dedent();
+        }catch(Exception e){ //handles the random extra caseBranch node
 
+        }
+        return null;
+    }
+    @Override
+    public Object visitCaseStatement(PascalParser.CaseStatementContext ctx){
+//        System.out.println("building switch statement");
+//        System.out.println("Expression: " + (String)visit(ctx.expression()));
+        code.emitStart("switch(");
+        code.emit((String)visit(ctx.expression()));
+        code.emitEnd(")");
+        code.emitLine("{");
+        code.indent();
+        visitCaseBranchList(ctx.caseBranchList());
+        code.dedent();
+        code.emitLine("}");
 
         return null;
     }

@@ -664,6 +664,19 @@ public class Converter extends PascalBaseVisitor<Object>
 
         return null;
     }
+    @Override
+    public Object visitProcedureCallStatement(PascalParser.ProcedureCallStatementContext ctx){
+//        System.out.println(ctx.procedureName().getText());
+        code.emitStart(ctx.procedureName().getText() + "(");
+        if(ctx.argumentList()!=null){
+
+//            System.out.println(ctx.argumentList().getText());
+            code.emit(ctx.argumentList().getText());
+
+        }
+        code.emitEnd(");");
+        return null;
+    }
 
     @Override
     public Object visitIfStatement(PascalParser.IfStatementContext ctx){
@@ -691,6 +704,7 @@ public class Converter extends PascalBaseVisitor<Object>
         System.out.println();
         return null;
     }
+
     @Override
     public Object visitCaseBranch(PascalParser.CaseBranchContext ctx){
         System.out.println("case branch visited");
